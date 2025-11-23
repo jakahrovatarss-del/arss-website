@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARSS - Pametno upravljanje vode za varno prihodnost</title>
+    <style>
+        :root {
+            --color-primary: #21808d;
+            --color-primary-hover: #1d7480;
+            --color-primary-active: #1a6873;
+            --color-background: #fafafa;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #666666;
+            --color-border: rgba(0, 0, 0, 0.08);
+            --color-card-border: rgba(0, 0, 0, 0.06);
+            --color-secondary: rgba(33, 128, 141, 0.06);
+            --color-teal-bg: rgba(33, 128, 141, 0.03);
+            --color-btn-primary-text: #ffffff;
+            --color-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --color-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --color-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #32b8c6;
+                --color-primary-hover: #2da6b2;
+                --color-primary-active: #299ea1;
+                --color-background: #0a0a0a;
+                --color-surface: #141414;
+                --color-text: #f0f0f0;
+                --color-text-secondary: #a0a0a0;
+                --color-border: rgba(255, 255, 255, 0.08);
+                --color-card-border: rgba(255, 255, 255, 0.06);
+                --color-secondary: rgba(50, 184, 198, 0.08);
+                --color-teal-bg: rgba(50, 184, 198, 0.04);
+                --color-btn-primary-text: #0a0a0a;
+                --color-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+                --color-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+                --color-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            header {
+                background: rgba(20, 20, 20, 0.85);
+            }
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-text);
+        }
+
+        .hero {
+            background: var(--color-background);
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            height: 300px;
+            background: radial-gradient(circle, var(--color-teal-bg) 0%, transparent 70%);
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-text);
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            max-width: 650px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .cta-button {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--color-shadow-md);
+        }
+
+        .section {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 3rem;
+        }
+
+        .section h2 {
+            font-size: 2.75rem;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .section-intro {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 4rem;
+            line-height: 1.7;
+            max-width: 800px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--color-shadow-lg);
+            border-color: var(--color-border);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .feature-card h3 {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .timeline-year {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            min-width: 100px;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--color-surface);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--color-shadow-lg);
+            border-color: var(--color-border);
+        }
+
+        .product-card h4 {
+            color: var(--color-primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .benefits-list {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: var(--color-surface);
+            border-left: 3px solid var(--color-primary);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--color-shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            box-shadow: var(--color-shadow-md);
+            transform: translateX(4px);
+        }
+
+        .benefit-item h4 {
+            color: var(--color-text);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .benefit-item p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .case-studies {
+            background: var(--color-teal-bg);
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin-top: 4rem;
+        }
+
+        .case-study {
+            background: var(--color-surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--color-shadow-sm);
+        }
+
+        .case-study h4 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        .case-study p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .contact-section {
+            background: var(--color-surface);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-item-icon {
+            font-size: 2rem;
+            color: var(--color-primary);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            box-shadow: var(--color-shadow-lg);
+            border-color: var(--color-primary);
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .step-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--color-text-secondary);
+            margin-top: 6rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--color-shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hero {
+                padding: 5rem 1.5rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 0 1.5rem;
+                margin: 4rem auto;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid,
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ARSS</div>
+            <ul class="nav-links">
+                <li><a href="#o-nas">O nas</a></li>
+                <li><a href="#resitev">Rešitev</a></li>
+                <li><a href="#productos">Produkti</a></li>
+                <li><a href="#koristi">Koristi</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Pametno upravljanje vode za varno prihodnost</h1>
+        <p>Celosten ekosistem napredne merilne tehnologije in pametne programske opreme za popoln nadzor nad porabo vode</p>
+        <a href="#kontakt" class="cta-button">Začnite zdaj</a>
+    </section>
+
+    <section class="section" id="o-nas">
+        <h2>Dve desetletji inovacij v merjenju vode</h2>
+        <p class="section-intro">ARSS je že več kot 20 let vodilno podjetje na področju inovativnih rešitev za merjenje vode. Naše rešitve so prisotne od velikih komunalnih sistemov do posameznih domov in zagotavljajo preglednost, učinkovitost in varnost.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">2003</div>
+                <div class="timeline-content">
+                    <strong>Ustanovitev podjetja ARSS</strong> z jasno vizijo postati vodilni inovator v industriji merjenja vode.
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2015</div>
+                <div class="timeline-content">
+                    <strong>Uvedba naprednih pametnih vodomerov</strong> iPerl, ki so postavili nove standarde natančnosti in zanesljivosti.
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2017</div>
+                <div class="timeline-content">
+                    <strong>Razvoj programske rešitve AURA</strong>, ki je postala osrednje orodje za digitalizacijo in optimizacijo procesov upravljanja z vodo.
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2020</div>
+                <div class="timeline-content">
+                    <strong>Nadgradnja s tehnologijo NB-IoT</strong>, ki omogoča zanesljivo in varno daljinsko odčitavanje podatkov.
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Vodovodov</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">700+</div>
+                <div class="stat-label">Aktivnih uporabnikov</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">180M+</div>
+                <div class="stat-label">Odčitkov</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3M+</div>
+                <div class="stat-label">Obdelanih fotografij</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="resitev">
+        <h2>Celosten ekosistem ARSS</h2>
+        <p class="section-intro">Naš pristop združuje napredno strojno opremo, inovativno komunikacijsko tehnologijo in sofisticirano programsko platformo v rešitev, ki zagotavlja nadzor v realnem času.</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763308496/search_images/fb6b425aac38dd4a341f93293e1fd0777eb98d7f.jpg" alt="iPerl pametni vodomer" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 1.5rem; background: var(--color-teal-bg); border-radius: 12px; padding: 1rem;">
+                <h3>Napredna merilna oprema</h3>
+                <p>Pametni vodomeri (iPerl, MeiTwin, Cordonel, ElectoSonic) zasnovani za najvišjo natančnost. Zaznavajo že minimalne pretoke in samodejno opozarjajo na anomalije.</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661047/search_images/e475ab8a0eaab06682b9d9fdc325743fdeb5b4df.jpg" alt="Echo NB-IoT naprava" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 1.5rem; background: var(--color-teal-bg); border-radius: 12px; padding: 1rem;">
+                <h3>Komunikacijska tehnologija</h3>
+                <p>Echo naprave omogočajo pametno povezljivost. Podatki se varno prenašajo preko NB-IoT omrežja. Združljivo z obstoječo infrastrukturo.</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661047/search_images/470f0ec70d3c4045f0b14b6f89484e9495807a4e.jpg" alt="AURA platforma dashboard" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 1.5rem; border-radius: 12px;">
+                <h3>Platforma AURA</h3>
+                <p>Možgani ekosistema, ki zbrane podatke pretvarjajo v uporabne informacije. Namenjena vsem deležnikom: vodovodom, terenskim ekipam in končnim uporabnikom.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="productos">
+        <h2>Naši produkti</h2>
+        <p class="section-intro">Tehnološko agnostičen pristop za nadgradnjo obstoječe infrastrukture</p>
+
+        <h3 style="margin-top: 3rem; margin-bottom: 1rem; color: var(--color-primary);">Pametni vodomeri</h3>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763308497/search_images/30e445945f50122867fa8f799a66ccc54eeca3f1.jpg" alt="iPerl vodomer" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>iPerl</h4>
+                <p>Napredni pametni vodomer z najvišjo natančnostjo in zanesljivostjo. Zazna minimalne pretoke vode.</p>
+            </div>
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661049/search_images/409b703d50ec45f57ab26cdf1a91cf1d919c8475.jpg" alt="Digitalni vodomer" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>MeiTwin</h4>
+                <p>Dvojni sistem za zahtevne aplikacije z maksimalno preciznostjo merjenja.</p>
+            </div>
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661049/search_images/575766a25de1cf66959977330b466bc034911195.jpg" alt="Pametni vodomer" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>Cordonel</h4>
+                <p>Zanesljiva rešitev za dolgotrajno uporabo v različnih pogojih.</p>
+            </div>
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763229745/search_images/0eed9733940c2835826279d2f4790a1de677f58e.jpg" alt="Industrijski vodomer" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>ElectoSonic</h4>
+                <p>Ultrazvočna tehnologija za najboljše rezultate pri industrijski uporabi.</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem; margin-bottom: 1rem; color: var(--color-primary);">Echo komunikacijske naprave</h3>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661048/search_images/fecceb85b9614e0dfd8df018ddbb9f2a3ea27624.jpg" alt="Echo Rep naprava" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>Echo Rep</h4>
+                <p>Idealen za posamezne objekte in jaške z obstoječimi vodomeri z radijsko komunikacijo.</p>
+            </div>
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661047/search_images/c719e5d08218610b827a8945c9a1c18b4f193631.jpg" alt="IoT sistem za nadzor vode" style="width: 100%; height: 180px; object-fit: cover; margin-bottom: 1rem; border-radius: 8px;">
+                <h4>Echo Lob</h4>
+                <p>Zasnovan za večstanovanjske zgradbe. Z eno napravo pokrije do 500 merilnikov.</p>
+            </div>
+            <div class="product-card">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1763661047/search_images/e475ab8a0eaab06682b9d9fdc325743fdeb5b4df.jpg" alt="Echo Pulser naprava" style="width: 100%; height: 180px; object-fit: contain; margin-bottom: 1rem; background: var(--color-teal-bg); border-radius: 8px; padding: 1rem;">
+                <h4>Echo Pulser</h4>
+                <p>Napredna rešitev za industrijske uporabnike z vodomeri s pulznim izhodom.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="koristi">
+        <h2>Koristi za vodovode</h2>
+        <p class="section-intro">AURA ni zgolj orodje za digitalizacijo — je operativni sistem za preoblikovanje vodovoda</p>
+
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <h4>📋 Digitalizacija brez papirja</h4>
+                <p>Eliminacija papirnega poslovanja in zmanjšanje časa obdelave podatkov do 80%. Digitalni delovni nalogi povečajo natančnost in zmanjšajo napake.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>🗺️ Upravljanje v realnem času</h4>
+                <p>Spletni portal za pripravo nalog, spremljanje ekip v živo in vizualizacijo na zemljevidih. Mobilne aplikacije vodijo delavce skozi vse postopke.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>💰 Zmanjšanje stroškov</h4>
+                <p>Daljinsko odčitavanje odpravlja obiske na terenu. Optimizacija poti znižuje potne stroške. Avtomatizacija sprošča delovno silo za pomembnejša dela.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>⚡ Proaktivno upravljanje</h4>
+                <p>Sistem samodejno analizira podatke in opozarja na anomalije: puščanja, poke cevi, povratni tok, nizko stanje baterij. Hitra reakcija še pred večjo škodo.</p>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 4rem;">Koristi za končne uporabnike</h2>
+        <p class="section-intro">Vaša nepremičnina je naložba. AURA jo aktivno varuje 24/7.</p>
+
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <h4>🚨 Zaznavanje puščanj</h4>
+                <p>Sistem zazna vsako porabo, tudi najtišja puščanja, ki jih standardni vodomeri zamudijo. Pravočasna opozorila preprečijo visoke račune in škodo.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>🏠 Daljinski nadzor</h4>
+                <p>Aktivirajte nadzor v času odsotnosti. Sistem vas opozori na vsako porabo v 24 urah. Zaščita pred škodo in krajo vode.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>❄️ Opozorila o zmrzali</h4>
+                <p>Sistem opozori, če temperatura pade pod 3°C ali preseže varno mejo. Preprečite poke cevi in razvoj škodljivih bakterij.</p>
+            </div>
+            <div class="benefit-item">
+                <h4>🔒 Preprečevanje kraje</h4>
+                <p>Odkrijte nepooblaščeno porabo z zunanjih pip ali zlorabo nepremičnine. Hitro ukrepanje na podlagi trdnih podatkov.</p>
+            </div>
+        </div>
+
+        <div class="case-studies">
+            <h3 style="margin-bottom: 2rem; color: var(--color-text);">Zgodbe iz prakse</h3>
+            
+            <div class="case-study">
+                <h4>Tiho kapljanje — škoda za več deset tisoč evrov</h4>
+                <p>V leseni montažni hiši je neopazno puščanje pod estrihom mesece vlažilo konstrukcijo in povzročilo obsežno škodo zaradi plesni in hišne gobe. Zavarovalnica je zahtevek zavrnila. Z AURA portalom bi lastnik opozorilo prejel prvi dan in preprečil katastrofo.</p>
+            </div>
+
+            <div class="case-study">
+                <h4>Puščanje vode — 1.000 € za novo črpalko</h4>
+                <p>Zaradi neopaženega puščanja se je vodna črpalka neprestano vklapljala, kar je povzročilo pregretje in okvaro. Strošek menjave je presegel 1.000 €, poleg tega so nastali visoki stroški za vodo. AURA bi s pravočasnim opozorilom preprečila okvaro drage opreme.</p>
+            </div>
+
+            <div class="case-study">
+                <h4>Odkrita zloraba hiše čez ocean</h4>
+                <p>Lastnik iz Amerike je preko AURA portala opazil redno porabo vode v svoji hiši v Avstraliji. Izkazalo se je, da je oskrbnik hišo oddajal na črno. Portal je zagotovil trden dokaz in omogočil takojšnje ukrepanje.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="kontakt">
+        <div class="contact-section">
+            <h2>Začnite z nadzorom nad vašo vodo</h2>
+            <p class="section-intro">Preprosto. Hitro. Učinkovito.</p>
+
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Pošljite fotografijo</h4>
+                    <p>Fotografirajte svoj obstoječi vodomer in nam sliko pošljite na info@arss.si</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Prejmite nasvet</h4>
+                    <p>Naša ekipa bo pregledala vaš merilnik in vam priporočila najustreznejšo rešitev — brezplačno in brez obveznosti</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Začnite z nadzorom</h4>
+                    <p>Po enostavni namestitvi boste takoj pridobili dostop do portala AURA in vseh pametnih funkcij</p>
+                </div>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-item-icon">📍</div>
+                    <strong>Naslov</strong>
+                    <span>Gosjakova ulica 3</span>
+                    <span>8000 Novo mesto, Slovenija</span>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">📞</div>
+                    <strong>Telefon</strong>
+                    <a href="tel:+38641357480" style="color: var(--color-primary); text-decoration: none;">+386 41 357 480</a>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">✉️</div>
+                    <strong>E-pošta</strong>
+                    <a href="mailto:info@arss.si" style="color: var(--color-primary); text-decoration: none;">info@arss.si</a>
+                </div>
+            </div>
+
+            <p style="margin-top: 3rem; font-style: italic; font-size: 1.2rem; color: var(--color-text-secondary);">Vaši vodomeri govorijo. Jih poslušate?</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 ARSS d.o.o. Vse pravice pridržane.</p>
+        <p style="margin-top: 0.5rem;">Pametno upravljanje vode za varno prihodnost</p>
+    </footer>
+</body>
+</html>
